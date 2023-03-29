@@ -1,6 +1,6 @@
 ## 快速开始
 ```bash
-go get github.com/beancookie/chatgpt-redis-service
+go get github.com/beancookie/chatgpt-redis-client
 ```
 
 ```go
