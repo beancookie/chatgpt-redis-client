@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/bwmarrin/snowflake"
 	redis "github.com/redis/go-redis/v9"
@@ -48,6 +49,18 @@ func (c ChatGPTRedisClient) Call(request string) string {
 
 	resp := <-pubsub.Channel()
 	return resp.Payload
+}
+
+func (c ChatGPTRedisClient) CallToCache(key int64, request string) {
+	c.rdb.Set(context.Background(), fmt.Sprintf("%d", key), c.Call(request), 30*time.Second)
+}
+
+func (c ChatGPTRedisClient) GetFromCache(key int64) string {
+	val, err := c.rdb.Get(context.Background(), fmt.Sprintf("%d", key)).Result()
+	if err != nil {
+		panic(err)
+	}
+	return val
 }
 
 func NewClient(redisHost string, redisPassword string, redisDB int) *ChatGPTRedisClient {
