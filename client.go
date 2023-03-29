@@ -59,7 +59,7 @@ func (c ChatGPTRedisClient) CallToCache(key int64, request string) {
 func (c ChatGPTRedisClient) GetFromCache(key int64) string {
 	val, err := c.rdb.Get(context.Background(), fmt.Sprintf("%d", key)).Result()
 	if err != nil {
-		panic(err)
+		return ""
 	}
 	return val
 }
