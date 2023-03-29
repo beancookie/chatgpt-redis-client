@@ -52,6 +52,7 @@ func (c ChatGPTRedisClient) Call(request string) string {
 }
 
 func (c ChatGPTRedisClient) CallToCache(key int64, request string) {
+	c.rdb.Set(context.Background(), fmt.Sprintf("%d", key), "", 30*time.Second)
 	c.rdb.Set(context.Background(), fmt.Sprintf("%d", key), c.Call(request), 30*time.Second)
 }
 
